@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Information Retrieval System - DBMS DA-2</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <h1>Medicine Information Retrieval System</h1>
+            <p>DBMS Project Demonstration — Search, UNF Flat View, & Normalized EER Relational Schema</p>
+        </div>
+    </header>
+
+    <main class="container main-content">
+         <!-- 1. Search & Retrieve at the Top -->
+        <section class="card search-section">
+            <h2>1. Search & Retrieve Catalogue (Cut Strip Recovery)</h2>
+            <p class="subtitle">Simulate identifying a medicine from a partial blister strip fragment.</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Type visible partial text (e.g., 'olo', 'aug', 'cet')..." />
+                <button onclick="performSearch()">Search</button>
+                <button onclick="simulateOCR()" style="background: #475569; margin-left: 5px;">📷 Upload Strip Photo (OCR)</button>
+            </div>
+            <div id="searchResults" class="search-results-box" style="display:none;"></div>
+        </section>
+
+        <!-- 2. UNF Raw Tables & Normalization Toggle -->
+        <section class="card normalization-section">
+            <div class="section-header">
+                <h2>2. Database Normalization State</h2>
+                <div class="toggle-btns">
+                    <button id="btnUNF" class="active-tab" onclick="switchView('unf')">View UNF (Unnormalized Form)</button>
+                    <button id="btnNorm" onclick="switchView('normalized')">⚡ Click to Normalize (3NF / EER Tables)</button>
+                </div>
+            </div>
+            <p id="viewDescription" class="subtitle">Showing initial flat table with repeating salt and batch groups (Violation of 1NF).</p>
+            <div id="tableContainer" class="table-container"></div>
+        </section>
+
+        <!-- 3. All EER Schema Tables Explorer -->
+        <section class="card schema-section">
+            <h2>3. EER Diagram Entity Tables Explorer</h2>
+            <p class="subtitle">Select any table from the normalized relational model:</p>
+            <div class="table-selector">
+                <button onclick="loadTable('Medicines')">Medicines</button>
+                <button onclick="loadTable('Manufacturers')">Manufacturers</button>
+                <button onclick="loadTable('Salts')">Salts</button>
+                <button onclick="loadTable('Categories')">Categories</button>
+                <button onclick="loadTable('Medicine_Salt_Mapping')">Medicine_Salt_Mapping</button>
+                <button onclick="loadTable('Batches')">Batches</button>
+                <button onclick="loadTable('Pharmacies')">Pharmacies</button>
+                <button onclick="loadTable('Pharmacy_Stock')">Pharmacy_Stock</button>
+                <button onclick="loadTable('Users')">Users</button>
+                <button onclick="loadTable('Search_History')">Search_History</button>
+            </div>
+            <h3 id="currentTableName" class="table-title">Select a table above</h3>
+            <div id="schemaTableContainer" class="table-container"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

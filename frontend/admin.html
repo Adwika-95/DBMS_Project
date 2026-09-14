@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — MedStrip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-header { background: linear-gradient(135deg, #1e1b4b, #4c1d95, #6d28d9); }
+        .admin-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+        .admin-tab { padding:8px 18px; border-radius:8px; border:2px solid #e2e8f0; background:#f8fafc; color:#64748b; font-weight:600; font-size:0.85rem; cursor:pointer; font-family:inherit; transition:all .2s; }
+        .admin-tab:hover,.admin-tab.active { background:#6d28d9; border-color:#6d28d9; color:white; }
+        .admin-panel { display:none; } .admin-panel.active { display:block; }
+        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+        .form-group { display:flex; flex-direction:column; gap:5px; }
+        .form-group.full { grid-column:1/-1; }
+        .form-label { font-size:0.78rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:.4px; }
+        .form-input,.form-select,.form-textarea { padding:9px 12px; border:1.5px solid #e2e8f0; border-radius:8px; font-family:inherit; font-size:0.9rem; color:#0f172a; outline:none; transition:border-color .2s; }
+        .form-input:focus,.form-select:focus,.form-textarea:focus { border-color:#6d28d9; box-shadow:0 0 0 3px rgba(109,40,217,.1); }
+        .form-textarea { resize:vertical; min-height:80px; }
+        .btn-submit { background:linear-gradient(135deg,#6d28d9,#4c1d95); color:white; border:none; padding:11px 28px; border-radius:8px; font-size:0.9rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .2s; }
+        .btn-submit:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(109,40,217,.4); }
+        .stat-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:20px; }
+        .stat-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; text-align:center; }
+        .stat-num { font-size:2rem; font-weight:800; color:#4c1d95; }
+        .stat-lbl { font-size:0.75rem; color:#64748b; text-transform:uppercase; letter-spacing:.5px; font-weight:600; margin-top:2px; }
+        .alert-success { background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:10px 14px; border-radius:8px; font-size:0.85rem; margin-bottom:14px; }
+        .alert-error { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:10px 14px; border-radius:8px; font-size:0.85rem; margin-bottom:14px; }
+        .access-denied { text-align:center; padding:60px 20px; }
+        .access-denied h2 { font-size:1.5rem; margin-bottom:10px; color:#991b1b; }
+        .table-actions { display:flex; gap:6px; }
+        .btn-edit { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:4px 10px; border-radius:5px; font-size:0.75rem; cursor:pointer; font-family:inherit; font-weight:600; }
+        .btn-delete { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; padding:4px 10px; border-radius:5px; font-size:0.75rem; cursor:pointer; font-family:inherit; font-weight:600; }
+    </style>
+</head>
+<body>
+
+<header class="app-header admin-header">
+    <div class="container header-inner">
+        <div class="logo-block">
+            <span class="logo-icon">⚙️</span>
+            <div>
+                <h1 class="logo-title">MedStrip Admin</h1>
+                <p class="logo-sub">Medicine Information Retrieval System — Admin Dashboard</p>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="index.html" class="nav-link">← Back to App</a>
+            <div class="user-badge" id="userBadge" style="display:none">
+                <img class="user-avatar" id="userAvatar" src="" alt="">
+                <span class="user-name" id="userName"></span>
+                <button class="btn-logout" onclick="logout()">Sign out</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="container main-content">
+
+    <!-- Access denied placeholder -->
+    <div class="card access-denied" id="accessDenied" style="display:none">
+        <div style="font-size:3rem;margin-bottom:12px">🔒</div>
+        <h2>Admin Access Required</h2>
+        <p style="color:#64748b;margin-bottom:20px">You need to sign in with an admin account to access this page.</p>
+        <button class="btn-primary" onclick="window.location.href='index.html'">Go to main app</button>
+    </div>
+
+    <div id="adminContent" style="display:none">
+
+        <!-- Stats overview -->
+        <section class="card" id="statsCard">
+            <div class="section-title-row">
+                <div>
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    <p class="section-sub">Real-time statistics from the database.</p>
+                </div>
+            </div>
+            <div class="stat-cards" id="statCards">
+                <div class="stat-card"><div class="stat-num" id="s-medicines">—</div><div class="stat-lbl">Medicines</div></div>
+                <div class="stat-card"><div class="stat-num" id="s-mfg">—</div><div class="stat-lbl">Manufacturers</div></div>
+                <div class="stat-card"><div class="stat-num" id="s-salts">—</div><div class="stat-lbl">Salts</div></div>
+                <div class="stat-card"><div class="stat-num" id="s-searches">—</div><div class="stat-lbl">Total Searches</div></div>
+                <div class="stat-card"><div class="stat-num" id="s-today">—</div><div class="stat-lbl">Searches Today</div></div>
+                <div class="stat-card"><div class="stat-num" id="s-inactive">—</div><div class="stat-lbl">Deactivated</div></div>
+            </div>
+
+            <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:10px">Recent Searches</h3>
+            <div class="table-container" id="recentSearchesTable"><p class="tbl-loading">Loading…</p></div>
+        </section>
+
+        <!-- Admin tabs -->
+        <section class="card">
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchTab('medicines')">💊 Medicines</button>
+                <button class="admin-tab" onclick="switchTab('add-medicine')">➕ Add Medicine</button>
+                <button class="admin-tab" onclick="switchTab('manufacturers')">🏭 Manufacturers</button>
+                <button class="admin-tab" onclick="switchTab('add-mfg')">➕ Add Manufacturer</button>
+                <button class="admin-tab" onclick="switchTab('salts')">🧪 Salts</button>
+                <button class="admin-tab" onclick="switchTab('add-salt')">➕ Add Salt</button>
+            </div>
+
+            <!-- Medicines list -->
+            <div class="admin-panel active" id="panel-medicines">
+                <h3 class="section-title">All Medicines</h3>
+                <div class="table-container" id="medicinesTable" style="max-height:500px"><p class="tbl-loading">Loading…</p></div>
+            </div>
+
+            <!-- Add Medicine -->
+            <div class="admin-panel" id="panel-add-medicine">
+                <h3 class="section-title" style="margin-bottom:16px">Add New Medicine</h3>
+                <div id="addMedMsg"></div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Brand Name *</label>
+                        <input class="form-input" id="med-brand" placeholder="e.g. Dolo 650" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Generic / Salt Name</label>
+                        <input class="form-input" id="med-generic" placeholder="e.g. Paracetamol">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Strength *</label>
+                        <input class="form-input" id="med-strength" placeholder="e.g. 650mg">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dosage Form</label>
+                        <select class="form-select" id="med-form">
+                            <option value="">— select —</option>
+                            <option>Tablet</option><option>Capsule</option><option>Syrup</option>
+                            <option>Injection</option><option>Cream</option><option>Ointment</option>
+                            <option>Inhaler</option><option>Drops</option><option>Granules</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Prescription Status</label>
+                        <select class="form-select" id="med-rx">
+                            <option>OTC</option><option>Rx</option>
+                            <option>Schedule H</option><option>Schedule H1</option><option>Schedule X</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Manufacturer *</label>
+                        <select class="form-select" id="med-mfg-id"><option>Loading…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select class="form-select" id="med-cat-id"><option>Loading…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tablet Colour</label>
+                        <input class="form-input" id="med-color" placeholder="e.g. White">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tablet Shape</label>
+                        <input class="form-input" id="med-shape" placeholder="e.g. Round, Oval">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Strip Size</label>
+                        <input class="form-input" id="med-strip" placeholder="e.g. 10 Tablets">
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">General Uses</label>
+                        <textarea class="form-textarea" id="med-uses" placeholder="Describe general therapeutic uses…"></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Warnings</label>
+                        <textarea class="form-textarea" id="med-warn" placeholder="Important warnings…"></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Storage Info</label>
+                        <input class="form-input" id="med-storage" placeholder="e.g. Store below 25°C in dry place">
+                    </div>
+                </div>
+                <button class="btn-submit" onclick="addMedicine()">Add Medicine</button>
+            </div>
+
+            <!-- Manufacturers list -->
+            <div class="admin-panel" id="panel-manufacturers">
+                <h3 class="section-title">All Manufacturers</h3>
+                <div class="table-container" id="mfgTable"><p class="tbl-loading">Loading…</p></div>
+            </div>
+
+            <!-- Add Manufacturer -->
+            <div class="admin-panel" id="panel-add-mfg">
+                <h3 class="section-title" style="margin-bottom:16px">Add Manufacturer</h3>
+                <div id="addMfgMsg"></div>
+                <div class="form-grid">
+                    <div class="form-group"><label class="form-label">Name *</label><input class="form-input" id="mfg-name" placeholder="Full manufacturer name"></div>
+                    <div class="form-group"><label class="form-label">Short Name</label><input class="form-input" id="mfg-short" placeholder="e.g. Cipla"></div>
+                    <div class="form-group"><label class="form-label">City</label><input class="form-input" id="mfg-city" placeholder="Mumbai"></div>
+                    <div class="form-group"><label class="form-label">State</label><input class="form-input" id="mfg-state" placeholder="Maharashtra"></div>
+                    <div class="form-group full"><label class="form-label">Website</label><input class="form-input" id="mfg-website" placeholder="https://..."></div>
+                </div>
+                <button class="btn-submit" onclick="addManufacturer()">Add Manufacturer</button>
+            </div>
+
+            <!-- Salts list -->
+            <div class="admin-panel" id="panel-salts">
+                <h3 class="section-title">All Salts / Active Ingredients</h3>
+                <div class="table-container" id="saltsTable"><p class="tbl-loading">Loading…</p></div>
+            </div>
+
+            <!-- Add Salt -->
+            <div class="admin-panel" id="panel-add-salt">
+                <h3 class="section-title" style="margin-bottom:16px">Add Salt / Active Ingredient</h3>
+                <div id="addSaltMsg"></div>
+                <div class="form-grid">
+                    <div class="form-group"><label class="form-label">Salt Name *</label><input class="form-input" id="salt-name" placeholder="e.g. Paracetamol"></div>
+                    <div class="form-group"><label class="form-label">Drug Class</label><input class="form-input" id="salt-class" placeholder="e.g. Analgesic/Antipyretic"></div>
+                </div>
+                <button class="btn-submit" onclick="addSalt()">Add Salt</button>
+            </div>
+
+        </section>
+    </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000/api";
+
+function getAuthHeaders() {
+    const token = localStorage.getItem("medstrip_token");
+    return token ? { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" } : {};
+}
+
+function showToast(msg, dur = 3000) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), dur);
+}
+
+function renderTable(container, columns, rows) {
+    if (!rows || rows.length === 0) {
+        container.innerHTML = `<p class="tbl-loading">No records.</p>`;
+        return;
+    }
+    let html = `<table><thead><tr>`;
+    columns.forEach(c => html += `<th>${c}</th>`);
+    html += `</tr></thead><tbody>`;
+    rows.forEach(row => {
+        html += `<tr>`;
+        columns.forEach(c => {
+            const v = row[c] !== null && row[c] !== undefined ? row[c] : "";
+            html += `<td title="${String(v).replace(/"/g,'&quot;')}">${String(v).slice(0,100)}</td>`;
+        });
+        html += `</tr>`;
+    });
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+}
+
+async function loadStats() {
+    const res  = await fetch(`${API_BASE}/admin/stats`, { headers: getAuthHeaders() });
+    const data = await res.json();
+    document.getElementById("s-medicines").textContent  = data.total_medicines || 0;
+    document.getElementById("s-mfg").textContent       = data.total_manufacturers || 0;
+    document.getElementById("s-salts").textContent     = data.total_salts || 0;
+    document.getElementById("s-searches").textContent  = data.total_searches || 0;
+    document.getElementById("s-today").textContent     = data.searches_today || 0;
+    document.getElementById("s-inactive").textContent  = data.total_inactive || 0;
+
+    const searches = data.recent_searches || [];
+    const cols = ["query_text","search_mode","top_match_score","result_count","search_timestamp","user_name"];
+    renderTable(document.getElementById("recentSearchesTable"), cols, searches);
+}
+
+async function loadMedicines() {
+    const res  = await fetch(`${API_BASE}/admin/medicines`, { headers: getAuthHeaders() });
+    const data = await res.json();
+    renderTable(document.getElementById("medicinesTable"), data.columns || [], data.rows || []);
+}
+
+async function loadManufacturers() {
+    const res  = await fetch(`${API_BASE}/admin/manufacturers`, { headers: getAuthHeaders() });
+    const data = await res.json();
+    const cols = ["manufacturer_id","name","short_name","city","state","website"];
+    renderTable(document.getElementById("mfgTable"), cols, data);
+}
+
+async function loadSalts() {
+    const res  = await fetch(`${API_BASE}/admin/salts`, { headers: getAuthHeaders() });
+    const data = await res.json();
+    const cols = ["salt_id","salt_name","drug_class","iupac_name"];
+    renderTable(document.getElementById("saltsTable"), cols, data);
+}
+
+async function populateSelects() {
+    const [mfgRes, catRes] = await Promise.all([
+        fetch(`${API_BASE}/admin/manufacturers`, { headers: getAuthHeaders() }),
+        fetch(`${API_BASE}/admin/categories`, { headers: getAuthHeaders() }),
+    ]);
+    const mfgs = await mfgRes.json();
+    const cats = await catRes.json();
+
+    const mfgSel = document.getElementById("med-mfg-id");
+    mfgSel.innerHTML = mfgs.map(m => `<option value="${m.manufacturer_id}">${m.name}</option>`).join("");
+
+    const catSel = document.getElementById("med-cat-id");
+    catSel.innerHTML = cats.map(c => `<option value="${c.category_id}">${c.category_name}</option>`).join("");
+}
+
+function switchTab(name) {
+    document.querySelectorAll(".admin-tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".admin-panel").forEach(p => p.classList.remove("active"));
+    event.currentTarget.classList.add("active");
+    document.getElementById(`panel-${name}`).classList.add("active");
+
+    if (name === "medicines")     loadMedicines();
+    if (name === "manufacturers") loadManufacturers();
+    if (name === "salts")         loadSalts();
+}
+
+async function addMedicine() {
+    const body = {
+        brand_name:          document.getElementById("med-brand").value.trim(),
+        generic_name:        document.getElementById("med-generic").value.trim() || null,
+        strength:            document.getElementById("med-strength").value.trim(),
+        dosage_form:         document.getElementById("med-form").value || null,
+        prescription_status: document.getElementById("med-rx").value,
+        manufacturer_id:     parseInt(document.getElementById("med-mfg-id").value),
+        category_id:         parseInt(document.getElementById("med-cat-id").value),
+        tablet_color:        document.getElementById("med-color").value.trim() || null,
+        tablet_shape:        document.getElementById("med-shape").value.trim() || null,
+        strip_size:          document.getElementById("med-strip").value.trim() || null,
+        uses:                document.getElementById("med-uses").value.trim() || null,
+        warnings:            document.getElementById("med-warn").value.trim() || null,
+        storage_info:        document.getElementById("med-storage").value.trim() || null,
+        salt_ids:            [],
+    };
+    if (!body.brand_name || !body.strength) {
+        document.getElementById("addMedMsg").innerHTML = `<div class="alert-error">Brand name and strength are required.</div>`;
+        return;
+    }
+    const res  = await fetch(`${API_BASE}/admin/medicines`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (res.ok) {
+        document.getElementById("addMedMsg").innerHTML = `<div class="alert-success">✅ Medicine added (ID: ${data.medicine_id})</div>`;
+        showToast("Medicine added successfully!");
+    } else {
+        document.getElementById("addMedMsg").innerHTML = `<div class="alert-error">❌ ${data.detail || "Error"}</div>`;
+    }
+}
+
+async function addManufacturer() {
+    const body = {
+        name:       document.getElementById("mfg-name").value.trim(),
+        short_name: document.getElementById("mfg-short").value.trim() || null,
+        city:       document.getElementById("mfg-city").value.trim() || null,
+        state:      document.getElementById("mfg-state").value.trim() || null,
+        website:    document.getElementById("mfg-website").value.trim() || null,
+    };
+    if (!body.name) { document.getElementById("addMfgMsg").innerHTML = `<div class="alert-error">Name is required.</div>`; return; }
+    const res  = await fetch(`${API_BASE}/admin/manufacturers`, { method: "POST", headers: getAuthHeaders(), body: JSON.stringify(body) });
+    const data = await res.json();
+    if (res.ok) {
+        document.getElementById("addMfgMsg").innerHTML = `<div class="alert-success">✅ Manufacturer added</div>`;
+        showToast("Manufacturer added!");
+    } else {
+        document.getElementById("addMfgMsg").innerHTML = `<div class="alert-error">❌ ${data.detail || "Error"}</div>`;
+    }
+}
+
+async function addSalt() {
+    const body = {
+        salt_name:  document.getElementById("salt-name").value.trim(),
+        drug_class: document.getElementById("salt-class").value.trim() || null,
+    };
+    if (!body.salt_name) { document.getElementById("addSaltMsg").innerHTML = `<div class="alert-error">Salt name required.</div>`; return; }
+    const res  = await fetch(`${API_BASE}/admin/salts`, { method: "POST", headers: getAuthHeaders(), body: JSON.stringify(body) });
+    const data = await res.json();
+    if (res.ok) {
+        document.getElementById("addSaltMsg").innerHTML = `<div class="alert-success">✅ Salt added</div>`;
+        showToast("Salt added!");
+    } else {
+        document.getElementById("addSaltMsg").innerHTML = `<div class="alert-error">❌ ${data.detail || "Error"}</div>`;
+    }
+}
+
+function logout() {
+    localStorage.removeItem("medstrip_token");
+    window.location.href = "index.html";
+}
+
+async function init() {
+    const hash = window.location.hash;
+    if (hash.startsWith("#token=")) {
+        localStorage.setItem("medstrip_token", hash.slice(7));
+        window.history.replaceState(null, "", window.location.pathname);
+    }
+
+    const token = localStorage.getItem("medstrip_token");
+    if (!token) {
+        document.getElementById("accessDenied").style.display = "block";
+        return;
+    }
+
+    const res  = await fetch(`${API_BASE}/auth/me`, { headers: { "Authorization": `Bearer ${token}` } });
+    const data = await res.json();
+
+    if (!data.authenticated || data.user.role !== "admin") {
+        document.getElementById("accessDenied").style.display = "block";
+        return;
+    }
+
+    const user = data.user;
+    document.getElementById("adminContent").style.display = "block";
+    document.getElementById("userBadge").style.display = "flex";
+    document.getElementById("userName").textContent = user.name;
+    if (user.avatar) document.getElementById("userAvatar").src = user.avatar;
+
+    await Promise.all([loadStats(), loadMedicines(), populateSelects()]);
+}
+
+init();
+</script>
+</body>
+</html>

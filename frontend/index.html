@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedStrip — Medicine Information & Blister Retrieval System</title>
+    <meta name="description" content="Clinical decision support system for identifying medicines from torn, degraded, or partial blister strip packaging. Powered by a normalized 3NF pharmaceutical database.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ── TOP NAVIGATION ── -->
+<header class="app-header">
+    <div class="container header-inner">
+        <div class="brand-block">
+            <div class="brand-logo">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
+                    <path d="m8.5 8.5 7 7"/>
+                </svg>
+            </div>
+            <div>
+                <div class="brand-title">MedStrip <span class="brand-badge">Clinical v2.2</span></div>
+                <div class="brand-subtitle">Medicine Information Retrieval & Blister Strip Identifier</div>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#search-section" class="nav-item active">Identification</a>
+            <a href="#dbms-section" class="nav-item">DBMS Evaluation</a>
+            <a href="admin.html" class="nav-item nav-item-admin" id="adminLink" style="display:none">Admin Portal</a>
+            <div class="db-status-chip">
+                <span class="status-indicator"></span>
+                <span>SQLite 3NF Active</span>
+            </div>
+            <div class="auth-box" id="authArea">
+                <button class="btn-signin" id="loginBtn" onclick="loginGoogle()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google Sign In
+                </button>
+                <div class="user-chip" id="userBadge" style="display:none">
+                    <img class="user-avatar" id="userAvatar" src="" alt="user">
+                    <span class="user-name" id="userName">User</span>
+                    <button class="btn-signout" onclick="logout()" title="Sign out">Sign out</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- ── REGULATORY NOTICE ── -->
+<div class="legal-notice-bar">
+    <div class="container legal-notice-inner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>
+            <strong>Academic Reference System:</strong> Designed to assist in pharmaceutical identification from partial strip clues. Always verify active ingredients with a registered medical practitioner or licensed pharmacist.
+        </span>
+    </div>
+</div>
+
+<main class="container main-content">
+
+    <!-- ── SECTION 1: SEARCH & IDENTIFICATION ── -->
+    <section class="clinical-card" id="search-section">
+        <div class="card-header-bar">
+            <div>
+                <h1 class="card-title">Medicine Strip Identification</h1>
+                <p class="card-description">Retrieve medicine identity using partial text fragments, chemical names, or high-resolution packaging OCR.</p>
+            </div>
+            <div class="search-mode-tabs">
+                <button class="tab-btn active" id="tabModeText" onclick="switchSearchTab('text')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="14" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/>
+                    </svg>
+                    Fragment Search
+                </button>
+                <button class="tab-btn" id="tabModeOcr" onclick="switchSearchTab('ocr')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                    Blister Strip Scanner
+                </button>
+            </div>
+        </div>
+
+        <!-- ── TAB CONTENT: FRAGMENT SEARCH ── -->
+        <div class="tab-pane active" id="paneTextSearch">
+            <div class="search-input-shell">
+                <div class="search-input-box">
+                    <svg class="search-lens-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="text-input"
+                        placeholder="Type visible fragments (e.g. 'Levipil 500', 'TORR ZAM', 'Pantop 40', 'Amox 500')..."
+                        autocomplete="off"
+                    />
+                    <button class="clear-btn" id="clearBtn" onclick="clearSearch()" title="Clear">✕</button>
+                </div>
+                <button class="btn-search-action" id="searchBtn" onclick="performSearch()">
+                    Search Catalog
+                </button>
+            </div>
+
+            <!-- Quick Clue Chips -->
+            <div class="quick-chips-row">
+                <span class="chips-label">Sample Clues:</span>
+                <button class="chip-item" onclick="setQuery('LEVIPIL 500')">Levipil 500</button>
+                <button class="chip-item" onclick="setQuery('TORR ZAM 50')">TORR ZAM 50</button>
+                <button class="chip-item" onclick="setQuery('TEL 40 GLEN')">TEL 40 GLEN</button>
+                <button class="chip-item" onclick="setQuery('PAN 40')">PAN 40</button>
+                <button class="chip-item" onclick="setQuery('AUGMENTIN 625')">Augmentin 625</button>
+            </div>
+        </div>
+
+        <!-- ── TAB CONTENT: BLISTER STRIP SCANNER ── -->
+        <div class="tab-pane" id="paneOcrScan" style="display:none">
+            <div class="ocr-workflow-container">
+                <!-- Dropzone -->
+                <div class="upload-dropzone" id="uploadZone">
+                    <input type="file" id="imageFileInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
+                    
+                    <div class="dropzone-idle" id="dropzoneIdle" onclick="document.getElementById('imageFileInput').click()">
+                        <div class="camera-icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                        </div>
+                        <div class="dropzone-text">
+                            <strong>Click or drag blister strip photo</strong>
+                            <p>Supports clear macro photos of foil, stamped text, or torn blister fragments (JPG, PNG, WebP up to 12 MB)</p>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Image & Analysis Panel -->
+                    <div class="dropzone-active" id="uploadPreview" style="display:none">
+                        <div class="image-preview-column">
+                            <img id="previewImg" class="strip-preview-thumb" alt="Blister photo">
+                            <div class="preview-meta">
+                                <span id="uploadFileInfo" class="file-name">strip.jpg</span>
+                                <button class="btn-inline-remove" onclick="removeImage()">Replace photo</button>
+                            </div>
+                        </div>
+
+                        <div class="analysis-column">
+                            <div class="analysis-header">
+                                <span class="analysis-badge">OCR Signal Extraction</span>
+                                <span class="analysis-status-text" id="analysisStatusText">Ready to analyze</span>
+                            </div>
+
+                            <!-- Structured Signals -->
+                            <div class="signals-grid" id="structuredSignalsBox" style="display:none">
+                                <div class="signal-row">
+                                    <span class="signal-label">Active Ingredient:</span>
+                                    <span class="signal-val" id="sigSalts">—</span>
+                                </div>
+                                <div class="signal-row">
+                                    <span class="signal-label">Detected Dosage:</span>
+                                    <span class="signal-val" id="sigStrengths">—</span>
+                                </div>
+                                <div class="signal-row">
+                                    <span class="signal-label">Brand Clues:</span>
+                                    <span class="signal-val" id="sigBrands">—</span>
+                                </div>
+                            </div>
+
+                            <!-- Extracted Tokens for Editing -->
+                            <div class="detected-tokens-editor" id="tokenEditorArea" style="display:none">
+                                <div class="editor-header">
+                                    <span>Extracted Search Clues (Click clue to toggle):</span>
+                                </div>
+                                <div class="tokens-chip-list" id="pillsList"></div>
+                            </div>
+
+                            <div class="analysis-actions">
+                                <button class="btn-search-action" id="ocrScanBtn" onclick="performOCRSearch()">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                    </svg>
+                                    Analyze & Match Medicine
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing State -->
+        <div class="loading-state-bar" id="ocrStatus" style="display:none">
+            <div class="spinner-clinical"></div>
+            <span id="ocrStatusText">Preprocessing blister strip & running EasyOCR neural network…</span>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults" class="results-container" style="display:none"></div>
+    </section>
+
+    <!-- ── SECTION 2: DBMS PROJECT EVALUATION SUITE ── -->
+    <section class="clinical-card" id="dbms-section">
+        <div class="card-header-bar">
+            <div>
+                <h2 class="card-title">DBMS Relational Architecture & Normalization</h2>
+                <p class="card-description">Live evaluation console demonstrating 3NF decomposition, SQL views, and relational integrity.</p>
+            </div>
+            <div class="dbms-nav-tabs">
+                <button class="tab-btn active" id="tabNorm" onclick="switchDbmsTab('normalization')">
+                    1NF vs 3NF Comparison
+                </button>
+                <button class="tab-btn" id="tabTables" onclick="switchDbmsTab('tables')">
+                    Relational Model Live
+                </button>
+                <button class="tab-btn" id="tabViews" onclick="switchDbmsTab('views')">
+                    SQL Views & Stats
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB 1: Normalization Demo -->
+        <div class="dbms-tab-pane active" id="paneNormalization">
+            <div class="normalization-toggle-group">
+                <button id="btnUNF" class="btn-norm-toggle active" onclick="switchNormView('unf')">
+                    Unnormalized Form (UNF / 1NF Violation)
+                </button>
+                <button id="btnNorm" class="btn-norm-toggle" onclick="switchNormView('normalized')">
+                    Decomposed 3rd Normal Form (3NF)
+                </button>
+            </div>
+
+            <div class="norm-explainer-card" id="normExplanation">
+                <div class="explainer-content">
+                    <strong>UNF Anomaly Demonstration:</strong>
+                    <span>
+                        In Unnormalized Form, salts and composition quantities are stored as flat comma-separated strings inside a single cell. 
+                        This violates First Normal Form (atomicity). It prevents indexing on individual chemical agents, risks update anomalies, and makes many-to-many relationship traversal impossible.
+                    </span>
+                </div>
+            </div>
+
+            <div class="table-wrapper" id="normTableContainer">
+                <div class="table-loading-notice">Loading normalization demonstration data…</div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Table Explorer -->
+        <div class="dbms-tab-pane" id="paneTables" style="display:none">
+            <div class="entity-selector-row">
+                <span class="selector-heading">Select Entity:</span>
+                <button onclick="loadTable('Medicines')" class="entity-btn active">Medicines</button>
+                <button onclick="loadTable('Manufacturers')" class="entity-btn">Manufacturers</button>
+                <button onclick="loadTable('Salts')" class="entity-btn">Salts</button>
+                <button onclick="loadTable('Medicine_Salt_Mapping')" class="entity-btn">Medicine_Salt_Mapping (M:N)</button>
+                <button onclick="loadTable('Packaging_Details')" class="entity-btn">Packaging_Details</button>
+                <button onclick="loadTable('OCR_Keywords')" class="entity-btn">OCR_Keywords</button>
+                <button onclick="loadTable('Batches')" class="entity-btn">Batches</button>
+                <button onclick="loadTable('Search_History')" class="entity-btn">Search_History</button>
+            </div>
+
+            <div class="table-meta-bar">
+                <span id="currentTableName" class="table-label">Table: Medicines</span>
+                <span class="table-badge">Foreign Key Enforced</span>
+            </div>
+
+            <div class="table-wrapper" id="schemaTableContainer">
+                <div class="table-loading-notice">Select an entity table to view live records.</div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SQL Views -->
+        <div class="dbms-tab-pane" id="paneViews" style="display:none">
+            <div class="entity-selector-row">
+                <span class="selector-heading">Select View:</span>
+                <button onclick="loadView('v_medicine_full')" class="entity-btn active">v_medicine_full</button>
+                <button onclick="loadView('v_unf_flat')" class="entity-btn">v_unf_flat</button>
+                <button onclick="loadView('v_manufacturer_stats')" class="entity-btn">v_manufacturer_stats</button>
+                <button onclick="loadView('v_search_stats')" class="entity-btn">v_search_stats</button>
+                <button onclick="loadView('v_same_composition')" class="entity-btn">v_same_composition</button>
+            </div>
+
+            <div class="table-meta-bar">
+                <span id="currentViewName" class="table-label">View: v_medicine_full</span>
+                <span class="table-badge">Compiled SQL View</span>
+            </div>
+
+            <div class="table-wrapper" id="viewsTableContainer">
+                <div class="table-loading-notice">Select a view to display aggregated database records.</div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ── DETAIL MODAL ── -->
+<div class="modal-backdrop" id="detailModal" style="display:none" onclick="closeModal(event)">
+    <div class="modal-dialog" id="detailModalBox">
+        <button class="modal-close-button" onclick="closeDetailModal()" title="Close monograph">✕</button>
+        <div id="detailModalContent"></div>
+    </div>
+</div>
+
+<!-- ── TOAST NOTIFICATION ── -->
+<div class="toast-chip" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

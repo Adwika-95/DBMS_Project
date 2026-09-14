@@ -1,0 +1,57 @@
+salt_name,iupac_name,drug_class
+Paracetamol,N-(4-hydroxyphenyl)acetamide,Analgesic/Antipyretic
+Ibuprofen,2-(4-isobutylphenyl)propanoic acid,NSAID
+Diclofenac Sodium,Sodium 2-(2-(2,6-dichlorophenylamino)phenyl)acetate,NSAID
+Aceclofenac,2-(2-(2,6-Dichlorophenylamino)phenylacetyloxy)acetic acid,NSAID
+Nimesulide,N-(4-nitro-2-phenoxyphenyl)methanesulfonamide,NSAID
+Aspirin,2-acetoxybenzoic acid,Antiplatelet/NSAID
+Tramadol Hydrochloride,rel-(1R,2R)-2-(dimethylaminomethyl)-1-(3-methoxyphenyl)cyclohexanol hydrochloride,Opioid Analgesic
+Amoxicillin,6-[amino(4-hydroxyphenyl)acetyl]amino-3,3-dimethyl-7-oxo-4-thia-1-azabicyclo[3.2.0]heptane-2-carboxylic acid,Penicillin Antibiotic
+Potassium Clavulanate,(Z)-(2R,5R)-3-(2-hydroxyethylidene)-7-oxo-4-oxa-1-azabicyclo[3.2.0]heptane-2-carboxylic acid potassium,Beta-lactamase Inhibitor
+Azithromycin,(2R,3S,4R,5R,8R,10R,11R,12S,13S,14R)-13-[(2,6-dideoxy-3-C-methyl-3-O-methyl-alpha-L-ribo-hexopyranosyl)oxy]-2-ethyl-3,4,10-trihydroxy-3,5,6,8,10,12,14-heptamethyl-11-[[3,4,6-trideoxy-3-(dimethylamino)-beta-D-xylo-hexopyranosyl]oxy]-1-oxa-6-azacyclopentadecan-15-one,Macrolide Antibiotic
+Ciprofloxacin,1-cyclopropyl-6-fluoro-4-oxo-7-piperazin-1-ylquinoline-3-carboxylic acid,Fluoroquinolone Antibiotic
+Cefpodoxime Proxetil,1-(isopropoxycarbonyloxy)ethyl (6R,7R)-7-[[(2Z)-2-(2-amino-1,3-thiazol-4-yl)-2-methoxyiminoacetyl]amino]-3-(methoxymethyl)-8-oxo-5-thia-1-azabicyclo[4.2.0]oct-2-ene-2-carboxylate,Cephalosporin Antibiotic
+Metronidazole,2-(2-methyl-5-nitroimidazol-1-yl)ethanol,Antiprotozoal/Antibiotic
+Doxycycline Hyclate,doxycycline;hydrochloride;hemiethanol;hemihydrate,Tetracycline Antibiotic
+Pantoprazole Sodium,Sodium 5-(difluoromethoxy)-2-[(3,4-dimethoxypyridin-2-yl)methylsulfinyl]-1H-benzimidazole,Proton Pump Inhibitor
+Omeprazole,6-methoxy-2-[(4-methoxy-3,5-dimethylpyridin-2-yl)methylsulfinyl]-1H-benzimidazole,Proton Pump Inhibitor
+Rabeprazole Sodium,Sodium 2-(((4-(3-methoxypropoxy)-3-methylpyridin-2-yl)methyl)sulfinyl)-1H-benzo[d]imidazole,Proton Pump Inhibitor
+Esomeprazole Magnesium,(S)-5-methoxy-2-[(4-methoxy-3,5-dimethylpyridin-2-yl)methylsulfinyl]-1H-benzimidazole magnesium,Proton Pump Inhibitor
+Domperidone,5-chloro-1-[1-[3-(2-oxo-2,3-dihydrobenzimidazol-1-yl)propyl]piperidin-4-yl]-2,3-dihydrobenzimidazol-2-one,Prokinetic/Antiemetic
+Cetirizine Hydrochloride,2-(4-((4-chlorophenyl)(phenyl)methyl)piperazin-1-yl)acetic acid;dihydrochloride,Antihistamine
+Levocetirizine Dihydrochloride,(R)-2-(4-((4-chlorophenyl)(phenyl)methyl)piperazin-1-yl)acetic acid;dihydrochloride,Antihistamine
+Fexofenadine Hydrochloride,(±)-4-[1-hydroxy-4-[4-(hydroxydiphenylmethyl)-1-piperidinyl]-butyl]-alpha,alpha-dimethylbenzeneacetic acid hydrochloride,Antihistamine
+Montelukast Sodium,Sodium (R)-(E)-1-[[[1-[3-[2-(7-chloro-2-quinolinyl)vinyl]phenyl]-3-[2-(1-hydroxy-1-methylethyl)phenyl]propyl]thio]methyl]cyclopropane acetic acid,Leukotriene Antagonist
+Telmisartan,4'-[(1,4'-dimethyl-2'-propyl-[2,6'-bi-1H-benzimidazol]-1'-yl)methyl]-[1,1'-biphenyl]-2-carboxylic acid,ARB Antihypertensive
+Losartan Potassium,Potassium 2-butyl-4-chloro-1-[[4-[2-(1H-tetrazol-5-yl)phenyl]phenyl]methyl]imidazole-5-methanol,ARB Antihypertensive
+Amlodipine Besylate,3-ethyl 5-methyl 2-(2-aminoethoxymethyl)-4-(2-chlorophenyl)-6-methyl-1,4-dihydropyridine-3,5-dicarboxylate; benzenesulfonate,Calcium Channel Blocker
+Atenolol,2-[4-[2-hydroxy-3-(propan-2-ylamino)propoxy]phenyl]acetamide,Beta Blocker
+Metformin Hydrochloride,3-(diaminomethylidene)-1,1-dimethylguanidine;hydrochloride,Biguanide Antidiabetic
+Glimepiride,3-ethyl-4-methyl-N-[2-[4-[(4-methylcyclohexyl)carbamoylsulfamoyl]phenyl]ethyl]-2-oxo-5H-pyrrole-1-carboxamide,Sulfonylurea Antidiabetic
+Sitagliptin Phosphate,(3R)-3-amino-1-[3-(trifluoromethyl)-6,8-dihydro-5H-[1,2,4]triazolo[4,3-a]pyrazin-7-yl]-4-(2,4,5-trifluorophenyl)butan-1-one;phosphoric acid,DPP-4 Inhibitor
+Vildagliptin,(2S)-1-[(3-hydroxyadamantan-1-yl)amino]acetyl-2-pyrrolidinecarbonitrile,DPP-4 Inhibitor
+Atorvastatin Calcium,calcium (3R,5R)-7-[2-(4-fluorophenyl)-3-phenyl-4-(phenylcarbamoyl)-5-propan-2-ylpyrrol-1-yl]-3,5-dihydroxyheptanoate,Statin
+Rosuvastatin Calcium,calcium bis[(3R,5S,6E)-7-[4-(4-fluorophenyl)-2-[methyl(methylsulfonyl)amino]-6-propan-2-ylpyrimidin-5-yl]-3,5-dihydroxyhept-6-enoate],Statin
+Clopidogrel Bisulfate,(S)-2-(2-chlorophenyl)-2-(4,5,6,7-tetrahydrothieno[3,2-c]pyridin-5-yl)acetic acid;sulfuric acid,Antiplatelet
+Sertraline Hydrochloride,(1S,4S)-4-(3,4-dichlorophenyl)-1,2,3,4-tetrahydronaphthalen-1-amine;hydrochloride,SSRI Antidepressant
+Alprazolam,8-chloro-1-methyl-6-phenyl-4H-[1,2,4]triazolo[4,3-a][1,4]benzodiazepine,Benzodiazepine
+Pantoprazole Sodium + Domperidone,,Combination
+Levothyroxine Sodium,Sodium (2S)-2-amino-3-[4-(4-hydroxy-3,5-diiodophenoxy)-3,5-diiodophenyl]propanoate,Thyroid Hormone
+Calcitriol,(1R,3S)-5-[2-[(1R,3aS,4E,7aR)-1-[(2R)-6-hydroxy-6-methylheptan-2-yl]-7a-methyl-2,3,3a,5,6,7-hexahydro-1H-inden-4-ylidene]ethylidene]-4-methylenecyclohexane-1,3-diol,Vitamin D Analog
+Calcium Carbonate,Calcium Carbonate,Calcium Supplement
+Vitamin D3,Cholecalciferol,Vitamin D Supplement
+Methylcobalamin,Cobalt(3+);[(2R,3S,4R,5S)-5-(5,6-dimethylbenzimidazol-1-yl)-4-hydroxy-2-(hydroxymethyl)oxolan-3-yl] [(2R)-1-[3-[(1R,2R,3R,5Z,7S,10Z,12S,13S,15Z,17S,18S,19R)-2,13,18-tris(2-amino-2-oxoethyl)-7,12,17-tris(3-amino-3-oxopropyl)-3,5,8,8,13,15,18,19-octamethyl-2,17-dihydro-1H-corrin-24-id-3-yl]propanoylamino]propan-2-yl] phosphate,Vitamin B12
+Folic Acid,pteroyl-L-glutamic acid,B Vitamin
+Ondansetron Hydrochloride,(RS)-9-methyl-3-[(2-methyl-1H-imidazol-1-yl)methyl]-2,3-dihydro-1H-carbazol-4(9H)-one dihydrochloride dihydrate,Antiemetic (5-HT3 antagonist)
+Dexamethasone,9-fluoro-11beta,17alpha,21-trihydroxy-16alpha-methylpregna-1,4-diene-3,20-dione,Corticosteroid
+Prednisolone,11beta,17alpha,21-trihydroxypregna-1,4-diene-3,20-dione,Corticosteroid
+Salbutamol Sulphate,4-[2-(tert-butylamino)-1-hydroxyethyl]-2-(hydroxymethyl)phenol sulfate,Beta-2 Agonist Bronchodilator
+Budesonide,(RS)-11β,16α,17,21-tetrahydroxypregna-1,4-diene-3,20-dione cyclic 16,17-acetal with butyraldehyde,Inhaled Corticosteroid
+Fluconazole,(2R,3R)-2-(2,4-difluorophenyl)-1,3-bis(1H-1,2,4-triazol-1-yl)propan-2-ol,Antifungal
+Clotrimazole,1-[(2-Chlorophenyl)diphenylmethyl]-1H-imidazole,Antifungal
+Rabeprazole Sodium + Domperidone,,Combination
+Aceclofenac + Paracetamol,,Combination (NSAID + Analgesic)
+Diclofenac + Paracetamol,,Combination (NSAID + Analgesic)
+Ibuprofen + Paracetamol,,Combination (NSAID + Analgesic)
+Amoxicillin + Potassium Clavulanate,,Combination (Antibiotic)
+Cefpodoxime + Potassium Clavulanate,,Combination (Antibiotic)

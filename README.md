@@ -70,30 +70,6 @@ To validate:
 ```powershell
 python scripts/validate_medicines.py
 ```
-
-### 5. Configure Google OAuth (optional, for login)
-
-Create a `.env` file in the project root:
-```env
-GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/api/auth/callback
-JWT_SECRET=a-long-random-secret-string
-FRONTEND_BASE=http://127.0.0.1:5500
-```
-
-In Google Cloud Console:
-- Create OAuth 2.0 credentials (Web application type)
-- Authorized redirect URI: `http://127.0.0.1:8000/api/auth/callback`
-
-Then load the env before starting:
-```powershell
-Get-Content .env | ForEach-Object { $k,$v = $_ -split '=',2; [System.Environment]::SetEnvironmentVariable($k,$v) }
-```
-
-> **Without OAuth configured**: Search and browse work for everyone.
-> Login button shows an error. Set `GOOGLE_CLIENT_ID` to enable login.
-
 ## Running
 
 **Terminal 1 — Backend:**

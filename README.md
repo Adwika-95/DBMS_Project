@@ -134,12 +134,6 @@ Open: http://127.0.0.1:5500
 | Transactions | dbms_demo_queries.sql Q15 |
 | Search history | Search_History table, logged on every search |
 
-## Viva Queries
-
-See `dbms_demo_queries.sql` for 18 ready-to-run SQL queries covering:
-Q1–Q18: salt joins, same-composition M:N traversal, multi-signal search, ranking,
-         aggregates, normalization views, transactions, data quality checks, etc.
-
 ## Safety Disclaimer
 
 This system is an academic medicine-information tool.
